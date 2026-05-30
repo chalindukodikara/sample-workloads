@@ -10,6 +10,10 @@ RUN echo "busybox" > /registry-proof
 FROM alpine:3.20 AS test-alpine
 RUN echo "alpine" > /tmp/registry-proof
 
+# GCR pull
+FROM gcr.io/google-containers/alpine-with-bash:1.0 AS test-gcr
+RUN echo "gcr" > /tmp/registry-proof
+
 # GHCR pull (~4 MB)
 FROM ghcr.io/jqlang/jq:latest AS test-ghcr
 RUN echo "ghcr" > /tmp/registry-proof
@@ -25,7 +29,6 @@ COPY --from=builder /app/go-greeter .
 COPY --from=test-busybox /registry-proof /tmp/proof-busybox
 COPY --from=test-alpine /tmp/registry-proof /tmp/proof-alpine
 COPY --from=test-gcr /tmp/registry-proof /tmp/proof-gcr
-COPY --from=test-ghcr /tmp/registry-proof /tmp/proof-ghcr
 COPY --from=test-quay /tmp/registry-proof /tmp/proof-quay
 
 RUN adduser \
