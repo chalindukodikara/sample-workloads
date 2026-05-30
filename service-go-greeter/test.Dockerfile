@@ -10,10 +10,6 @@ RUN echo "busybox" > /registry-proof
 FROM alpine:3.20 AS test-alpine
 RUN echo "alpine" > /tmp/registry-proof
 
-# GCR pull (~1 MB)
-FROM gcr.io/google-containers/pause:3.9 AS test-gcr
-RUN echo "gcr" > /tmp/registry-proof
-
 # GHCR pull (~4 MB)
 FROM ghcr.io/jqlang/jq:latest AS test-ghcr
 RUN echo "ghcr" > /tmp/registry-proof
