@@ -10,6 +10,9 @@ RUN echo "busybox" > /registry-proof
 FROM alpine:3.20 AS test-alpine
 RUN echo "alpine" > /tmp/registry-proof
 
+FROM nginx:1.27-alpine AS test-nginx
+RUN echo "nginx" > /tmp/registry-proof
+
 # GCR pull
 FROM gcr.io/google-containers/alpine-with-bash:1.0 AS test-gcr
 RUN echo "gcr" > /tmp/registry-proof
@@ -28,6 +31,7 @@ WORKDIR /app
 COPY --from=builder /app/go-greeter .
 COPY --from=test-busybox /registry-proof /tmp/proof-busybox
 COPY --from=test-alpine /tmp/registry-proof /tmp/proof-alpine
+COPY --from=test-nginx /tmp/registry-proof /tmp/proof-nginx
 COPY --from=test-gcr /tmp/registry-proof /tmp/proof-gcr
 COPY --from=test-quay /tmp/registry-proof /tmp/proof-quay
 
